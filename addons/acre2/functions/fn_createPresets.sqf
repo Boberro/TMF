@@ -95,11 +95,11 @@ private _sharedRadioChannelListing = [];
             private _return = [_radioName, (_radioSettingEntry select 5), _presetName] call acre_api_fnc_copyPreset; // tweak
             //Preset Data doesn't exist, create fake preset.
             if (!_return) then {
-                private _radioPresetData = [] call acre_sys_core_fnc_fastHashCreate
+                private _radioPresetData = [] call acre_sys_core_fnc_fastHashCreate;
                 
                 _channels = [];
                 for "_i" from 0 to 15 do {
-                    private _channel = [] call acre_sys_core_fnc_fastHashCreate
+                    private _channel = [] call acre_sys_core_fnc_fastHashCreate;
                     _channel setVariable ["frequencyTX",0];
                     _channels pushBack _channel;
                 };
