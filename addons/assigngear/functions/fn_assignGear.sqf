@@ -45,19 +45,28 @@ _unit setUnitLoadout (configFile >> 'EmptyLoadout');
             case 1: { // uniform
                 private _uniform = selectRandom _x;
                 if !(_uniform isEqualTo '') then {
+                    private _backup = uniformItems _unit;
                     _unit forceAddUniform _uniform;
+                    {_unit removeItemFromUniform _x} forEach uniformItems _unit;
+                    {_unit addItemToUniform _x}      forEach _backup;
                 };
             };
             case 2: { // vest
                 private _vest = selectRandom _x;
                 if !(_vest isEqualTo '') then {
+                    private _backup = vestItems _unit;
                     _unit addVest _vest;
+                    {_unit removeItemFromVest _x} forEach vestItems _unit;
+                    {_unit addItemToVest _x}      forEach _backup;
                 };
             };
             case 3: { // backpack
                 private _backpack = selectRandom _x;
                 if !(_backpack isEqualTo '') then {
+                    private _backup = backpackItems _unit;
                     _unit addBackpack _backpack;
+                    {_unit removeItemFromBackpack _x} forEach backpackItems _unit;
+                    {_unit addItemToBackpack _x}      forEach _backup;
                 };
             };
             case 4: { // headgear
