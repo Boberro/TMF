@@ -35,6 +35,7 @@
 #define LIST_19(var1) var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1
 #define LIST_20(var1) var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1,var1
 
+/* assignGear cache indexes */
 #define IDX_DISPLAY_NAME 0
 #define IDX_UNIFORM 1
 #define IDX_VEST 2
