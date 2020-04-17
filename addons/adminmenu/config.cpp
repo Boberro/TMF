@@ -13,11 +13,11 @@ class CfgPatches {
     };
 };
 
-GVAR(authorized_uids)[] = {
 // SteamID64 of players authorized to access admin tools (matches against getPlayerUID)
-    "76561197975964276",
-    "76561198002563273",
-    "76561198060093093"
+class GVAR(authorized_players) {
+    /*class Bear {
+        uid = "12345";
+    };*/
 };
 
 #include "CfgDebriefing.hpp"
