@@ -89,6 +89,7 @@ private _fnc_addMagazines = {
                 if (_backpack == 'default') then { _backpack = _defBackpack; };
                 if !(_backpack isEqualTo '') then {
                     _unit addBackpack _backpack;
+                    clearAllItemsFromBackpack _unit;
                 };
             };
             case IDX_HEADGEAR: {
