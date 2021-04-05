@@ -25,31 +25,20 @@ _notesPos set [3, ctrlTextHeight _ctrlMissionNotes];
 _ctrlMissionNotes ctrlSetPosition _notesPos;
 _ctrlMissionNotes ctrlCommit 0;
 
+// Safestart
 private _ctrlCheckSafestart = _display displayCtrl IDC_TMF_ADMINMENU_DASH_SAFESTART;
-(entities QEGVAR(safestart,module)) params [["_safestartModule", objNull, [objNull]]];
-if (isNull _safestartModule) then {
-    _ctrlCheckSafestart cbSetChecked false;
-} else {
-    _ctrlCheckSafestart cbSetChecked (_safestartModule getVariable [QEGVAR(safestart,enabled), false]);
-};
-
+_ctrlCheckSafestart cbSetChecked ([] call EFUNC(safestart,isActive));
 _ctrlCheckSafestart ctrlAddEventHandler ["CheckedChanged", {
-    (entities QEGVAR(safestart,module)) params [["_safestartModule", objNull, [objNull]]];
-
     if ((param [1]) isEqualTo 0) then {
-        if (!isNull _safestartModule) then {
-            [_safestartModule] call EFUNC(safestart,end);
-        };
+        [true] call EFUNC(safestart,end);
+        [format ["%1 Ended safestart",profileName],false,"Admin Menu"] call FUNC(log);
     } else {
-        if (isNull _safestartModule) then {
-            _safestartModule = call EFUNC(safestart,create);
-        };
-
-        _safestartModule setVariable ["Duration", -1, true];
-        [_safestartModule, allUnits, true] remoteExecCall [QEFUNC(safestart,serverInit), 2];
+        [-1,true] call EFUNC(safestart,set);
+        [format ["%1 Enabled safestart",profileName],false,"Admin Menu"] call FUNC(log);
     };
 }];
 
+// Talk to spectators
 private _ctrlCheckSpectatorTalk = _display displayCtrl IDC_TMF_ADMINMENU_DASH_SPECTATORTALK;
 _ctrlCheckSpectatorTalk cbSetChecked ([player] call acre_api_fnc_isSpectator);
 if (alive player) then {
@@ -57,6 +46,11 @@ if (alive player) then {
         params ["", "_state"];
         [_state isEqualTo 1] call acre_api_fnc_setSpectator;
         systemChat format ["[TMF Admin Menu] Spectator talk toggled %1", ["off", "on"] select _state];
+        if (_state isEqualTo 1) then {
+            [format ["%1 Started talking to spectators",profileName],false,"Admin Menu"] call FUNC(log);
+        } else {
+            [format ["%1 Stopped talking to spectators",profileName],false,"Admin Menu"] call FUNC(log);
+        };
     }];
 } else {
     _ctrlCheckSpectatorTalk ctrlEnable false;

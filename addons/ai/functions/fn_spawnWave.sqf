@@ -9,12 +9,13 @@
  * N/A
  *
  * Description:
- * Handlls spawning units 
+ * Handles spawning units
  */
 #include "\x\tmf\addons\AI\script_component.hpp"
 params ["_logic"];
 private _spawnedVehicles = [];
 private _spawnedGroups = [];
+private _spawnedUnits = [];
 private _data = _logic getVariable [QGVAR(waveData), []];
 _data params ['_groups', '_vehicles'];
 {
@@ -31,11 +32,12 @@ _data params ['_groups', '_vehicles'];
 
 {
     _x params ['_side', '_units', '_waypoints'];
-    
+
     private _grp = createGroup [_side, true]; // Delete group when empty
     {
-        _x params ["_type","_pos","_dir","_gear", "_vehicleIndex", "_vehicleRole"];
+        _x params ["_type","_pos","_dir","_gear", "_vehicleIndex", "_vehicleRole","_disabledAIFeatures"];
         private _unit = _grp createUnit [_type, [0,0,0],[] , 0, "NONE"];
+        _spawnedUnits pushBack _unit;
         _unit setPosATL _pos;
         _unit setUnitLoadout [_gear, false];
         _unit setDir _dir;
@@ -69,9 +71,13 @@ _data params ['_groups', '_vehicles'];
             };
         };
 
+        {
+            _unit disableAI _x;
+        } forEach _disabledAIFeatures;
     } forEach _units;
     (units _grp) join _grp;
      _lastIndex = (count waypoints _grp)-1;
+    [_grp] call CBA_fnc_clearWaypoints;
     for "_i" from 0 to ((count _waypoints) - 1) step 1 do {
         _way = _waypoints select _i;
 
@@ -116,3 +122,5 @@ if(_logic getVariable ["Waves",1] > 0) then {
     };
 
 };
+
+[format ["Spawned wave, unit count: %1, vehicle count: %2, group count %3",count _spawnedUnits,count _spawnedVehicles,count _spawnedGroups],count _spawnedUnits > 40, "AI"] call EFUNC(adminmenu,log);
