@@ -127,8 +127,9 @@ GVAR(interfaceControls) = [
         IDC_SPECTATOR_TMF_SPECTATOR_TAGS, IDC_SPECTATOR_TMF_SPECTATOR_VIEW,
         IDC_SPECTATOR_TMF_SPECTATOR_COMPASS, IDC_SPECTATOR_TMF_SPECTATOR_COMPASSLEFT,
         IDC_SPECTATOR_TMF_SPECTATOR_COMPASSRight, IDC_SPECTATOR_TMF_SPECTATOR_MUTE,
-        IDC_SPECTATOR_TMF_SPECTATOR_MENUBACK
+        IDC_SPECTATOR_TMF_SPECTATOR_RADIO, IDC_SPECTATOR_TMF_SPECTATOR_MENUBACK
 ];
+
 GVAR(vehicles) = [];
 GVAR(tracers) = true;
 GVAR(bulletTrails) = false;
@@ -155,19 +156,19 @@ GVAR(freeCam) camCommit 0;
 GVAR(camera) camCommit 0;
 // 0 follow cam, 1 freecam, 2 firstperson
 GVAR(mode) = FOLLOWCAM;
-private _allowedModes = [getMissionConfigValue ["TMF_Spectator_AllowFollowCam",true],getMissionConfigValue ["TMF_Spectator_AllowFreeCam",true],getMissionConfigValue ["TMF_Spectator_AllowFPCam",true]];
+GVAR(allowed_modes) = [GVAR(followCameraEnabled),GVAR(freeCameraEnabled),GVAR(firstPersonCameraEnabled)];
 {
     if(_x) exitWith {
         GVAR(mode) = _forEachIndex;
     };
-} forEach _allowedModes;
+} forEach GVAR(allowed_modes);
 
 
 // Sides Button
 GVAR(sides) = [blufor,civilian,opfor,independent];
 GVAR(sides_button_state) = 0;
-GVAR(sides_button_mode) = [ 
-    [blufor,civilian,opfor,independent], 
+GVAR(sides_button_mode) = [
+    [blufor,civilian,opfor,independent],
     [blufor],
     [opfor],
     [independent],
@@ -176,7 +177,7 @@ GVAR(sides_button_mode) = [
 GVAR(sides_button_strings) = ["SHOWING ALL SIDES", "SHOWING BLUFOR", "SHOWING OPFOR", "SHOWING INDEPENDENT", "SHOWING CIVILIAN"];
 
 
-if (!getMissionConfigValue ["TMF_Spectator_AllSides",true]) then {
+if (!GVAR(canSpectateAllSides)) then {
   GVAR(sides) = [tmf_spectator_entryside];
   GVAR(sides_button_mode) = [[tmf_spectator_entryside]];
   GVAR(sides_button_strings) = ["SHOWING YOUR SIDE"];

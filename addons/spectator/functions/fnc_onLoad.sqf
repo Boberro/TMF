@@ -1,6 +1,7 @@
 params ["_display"];
 #include "\x\tmf\addons\spectator\script_component.hpp"
 
+uiNamespace setVariable [QGVAR(display), _display];
 GVAR(unitUpdate) = -1; // Force unit list to update.
 GVAR(vehicles) = [];
 with uiNamespace do {
@@ -15,6 +16,7 @@ with uiNamespace do {
     GVAR(tagsbutton) = _display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_TAGS;
     GVAR(view) = _display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_VIEW;
     GVAR(mute) = _display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_MUTE;
+    GVAR(radio) = _display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_RADIO;
     GVAR(map) = _display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_MAP;
     GVAR(compass) = [_display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_COMPASSLEFT,_display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_COMPASS,_display displayCtrl IDC_SPECTATOR_TMF_SPECTATOR_COMPASSRight];
 
@@ -36,14 +38,13 @@ with uiNamespace do {
 
 
 
-if(!getMissionConfigValue ["TMF_Spectator_AllSides",true]) then {
+if(!GVAR(canSpectateAllSides)) then {
     GVAR(sides) = [tmf_spectator_entryside];
-    GVAR(sides_button_mode) = [[tmf_spectator_entryside],[]];
-    GVAR(sides_button_strings) = ["SHOWING YOUR SIDE","NONE"];
+    GVAR(sides_button_mode) = [[tmf_spectator_entryside], []];
+    GVAR(sides_button_strings) = ["SHOWING YOUR SIDE", "NONE"];
 };
 
-if (!isNil QGVAR(zeusPos) && { getMissionConfigValue ["TMF_Spectator_AllowFreeCam",true] }) then {
-
+if (!isNil QGVAR(zeusPos) && { GVAR(freeCameraEnabled) }) then {
     GVAR(mode) = FREECAM;
     [] call FUNC(setTarget);
 
@@ -56,8 +57,8 @@ if (!isNil QGVAR(zeusPos) && { getMissionConfigValue ["TMF_Spectator_AllowFreeCa
     GVAR(camera) camCommit 0;
     GVAR(zeusPos) = nil;
 } else {
-    if (missionNamespace getVariable [QGVAR(mode),-1] isEqualTo - 1) then {
-        private _allowedModes = [getMissionConfigValue ["TMF_Spectator_AllowFollowCam",true],getMissionConfigValue ["TMF_Spectator_AllowFreeCam",true],getMissionConfigValue ["TMF_Spectator_AllowFPCam",true]];
+    if (missionNamespace getVariable [QGVAR(mode),-1] isEqualTo -1) then {
+        private _allowedModes = [GVAR(followCameraEnabled),GVAR(freeCameraEnabled),GVAR(firstPersonCameraEnabled)];
         {
             if(_x) exitWith {
                 GVAR(mode) = _forEachIndex;
@@ -65,7 +66,6 @@ if (!isNil QGVAR(zeusPos) && { getMissionConfigValue ["TMF_Spectator_AllowFreeCa
             };
         } forEach _allowedModes;
     } else {
-        // use pre-existing GVAR(mode)
         [] call FUNC(setTarget);
     };
 };
@@ -86,5 +86,8 @@ if (isClass(configFile >> "CfgPatches" >> "acre_main")) then {
 else { // else remove it
     with uiNamespace do {
         GVAR(mute) ctrlShow false; // hide mute button
+        GVAR(radio) ctrlShow false;
     };
 };
+
+[QGVAR(displayOnLoad), [_display]] call CBA_fnc_localEvent;
