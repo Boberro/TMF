@@ -55,7 +55,7 @@ private _loadoutArray = [];
             };
             _loadoutArray set [IDX_GOGGLES, _goggles];
         };
-	CASE("hmd",IDX_HMD);
+    CASE("hmd",IDX_HMD);
         CASE("faces",IDX_FACES);
         CASE("insignias",IDX_INSIGNIAS);
 
