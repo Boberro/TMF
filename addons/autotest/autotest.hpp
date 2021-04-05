@@ -30,7 +30,7 @@ class ADDON {
     };
     class GVAR(testDLC) {
         code = QUOTE([] call FUNC(testDLC));
-        ignoredDLC[] = {/*798390*/};
+        ignoredDLC[] = {1042220, 395180};
     };
     class GVAR(testHCs) {
         code = QUOTE([] call FUNC(testHCs));
