@@ -38,7 +38,6 @@ private _defUniform = uniform _unit;
 private _defVest = vest _unit;
 private _defBackpack = backpack _unit;
 private _defHeadgear = headgear _unit;
-private _defGoggles = goggles _unit;
 private _defHmd = hmd _unit;
 
 _unit setUnitLoadout (configFile >> 'EmptyLoadout');
@@ -100,12 +99,7 @@ private _fnc_addMagazines = {
                 };
             };
             case IDX_GOGGLES: {
-                // Goggles are overwritten by player identity
-                private _goggles = selectRandom _x;
-                if (_goggles == 'default') then { _goggles = _defGoggles; };
-                if !(_goggles isEqualTo '') then {
-                    _unit addGoggles _goggles;
-                };
+                [_unit, _x] call FUNC(setGoggles);
             };
             case IDX_HMD: {
                 private _hmd = selectRandom _x;
@@ -113,7 +107,6 @@ private _fnc_addMagazines = {
                 if !(_hmd isEqualTo '') then {_unit linkItem _hmd};
             };
             case IDX_FACES: {
-                // Faces are overwritten by player identity
                 [_unit, _x] call FUNC(setFace);
             };
             case IDX_INSIGNIAS: {
